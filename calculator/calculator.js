@@ -5,19 +5,15 @@ var Calculator = (function() {
   */
   function Calculator(option) {
     this.calcViewModel = new CalcViewModel(this, option);
-    this._haveToRefresh = true;
-    this.calcData = {
-      currentOperate: null,
-      currentOperater: null,
-      dataList: []
-    };
+    this.setHaveToRefresh(true);
+    this.initializeData();
   }
 
   Calculator.prototype.clickNumberButton = function(event) {
     var data = this.calcViewModel.getData();
-    if (this._haveToRefresh === true) {
+    if (this.getHaveToRefresh()) {
       if (event.buttonValue !== "0") {
-        this._haveToRefresh = false;
+        this.setHaveToRefresh(false);
       }
       data = "";
     }
@@ -47,8 +43,8 @@ var Calculator = (function() {
 
   Calculator.prototype.decialPointHandler = function() {
     var data = this.calcViewModel.getData();
-    if (this._haveToRefresh === true) {
-      this._haveToRefresh = false;
+    if (this.getHaveToRefresh()) {
+      this.setHaveToRefresh(false);
       data = "0.";
     }
     if (data.indexOf(".") === -1) {
@@ -58,21 +54,21 @@ var Calculator = (function() {
   };
 
   Calculator.prototype.resetCalc = function() {
-    this._haveToRefresh = true;
-    this.calcData = {
-      currentOperate: null,
-      currentOperater: null,
-      dataList: []
-    };
+    this.setHaveToRefresh(true);
+    this.initializeData();
     this.calcViewModel.setData("0");
   };
 
   Calculator.prototype.equalHandler = function(data) {
     var dataList = this.calcData.dataList;
-    var currentOperate = this.calcData.currentOperate;
+    var currentExpression = this.getCurrentExpression();
+    var currentOperator = this.getCurrentOperator();
     var result;
-    if (this.calcData.currentOperater === "=") {
-      result = currentOperate.operate(dataList.pop(), currentOperate.value);
+    if (currentOperator === "=") {
+      result = currentExpression.operate(
+        dataList.pop(),
+        currentExpression.value
+      );
       dataList.push(result);
       this.calcViewModel.setData(result);
     } else {
@@ -80,8 +76,8 @@ var Calculator = (function() {
       this.calculate();
     }
 
-    this.calcData.currentOperater = "=";
-    this._haveToRefresh = true;
+    this.setCurrentOperator("=");
+    this.setHaveToRefresh(true);
   };
 
   Calculator.prototype.operatorHandler = function(operator, data) {
@@ -90,33 +86,66 @@ var Calculator = (function() {
     if (this.isCanCalculate()) {
       this.calculate();
     }
-    this.calcData.currentOperater = operator;
-    this._haveToRefresh = true;
+    this.setCurrentOperator(operator);
+    this.setHaveToRefresh(true);
   };
 
   Calculator.prototype.isCanCalculate = function() {
-    if (this.calcData.currentOperater === "=") {
+    var currentOperator = this.getCurrentOperator();
+    if (currentOperator === "=") {
       this.calcData.dataList.pop();
     }
-    return (
-      this.calcData.dataList.length === 2 &&
-      this.calcData.currentOperater !== "="
-    );
+    return this.calcData.dataList.length === 2 && currentOperator !== "=";
   };
 
   Calculator.prototype.calculate = function() {
     var dataList = this.calcData.dataList;
+    var currentOperator = this.getCurrentOperator();
     var b = dataList.pop();
     var a = dataList.pop();
-    var operate = this.findOpertorFunction(this.calcData.currentOperater);
+    var operate = this.findOpertorFunction(currentOperator);
     var result = this[operate](a, b);
 
     dataList.push(result);
     this.calcViewModel.setData(result);
+    this.setCurrentExpression(this[operate], b);
+  };
 
-    this.calcData.currentOperate = {
-      value: b,
-      operate: this[operate]
+  Calculator.prototype.setHaveToRefresh = function(booleanData) {
+    this._haveToRefresh = booleanData === true ? true : false;
+  };
+
+  Calculator.prototype.getHaveToRefresh = function() {
+    return this._haveToRefresh;
+  };
+
+  Calculator.prototype.setCurrentExpression = function(
+    operaterFunction,
+    value
+  ) {
+    this.calcData.currentExpression = {
+      operate: operaterFunction,
+      value: value
+    };
+  };
+
+  Calculator.prototype.getCurrentExpression = function() {
+    return this.calcData.currentExpression;
+  };
+
+  Calculator.prototype.setCurrentOperator = function(operator) {
+    this.calcData.currentOperator = operator;
+  };
+
+  Calculator.prototype.getCurrentOperator = function() {
+    return this.calcData.currentOperator;
+  };
+
+  Calculator.prototype.initializeData = function() {
+    this.calcData = {
+      currentExpression: null,
+      currentOperator: null,
+      dataList: []
     };
   };
 

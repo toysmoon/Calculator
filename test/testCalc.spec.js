@@ -15,10 +15,14 @@ const testcase = [
   //자리수 제한 테스트
   { command: "123456789012345.123456789", result: "1,234,567,890.12345" },
   //나누기 소숫점 자리수 제한 테스트
-  { command: "1/3=", result: "0.33333" }
+  { command: "1/3=", result: "0.33333" },
+  //곱하기 소숫점 자리수 제한 테스트
+  { command: ".006*.006=", result: "0.00003" },
+  //곱하기 소숫점 자리수 제한 테스트
+  { command: ".006*.006==", result: "0" }
 ];
 
-describe("calculator basic button event :", () => {
+describe("Test Command Case :", () => {
   beforeEach(() => {
     calculator1.clickFuncButton({ buttonValue: "R" });
   });
@@ -28,6 +32,32 @@ describe("calculator basic button event :", () => {
       const test = testcase[i];
       const result = commandCenter(test.command);
       expect(result).toBe(test.result);
+      calculator1.clickFuncButton({ buttonValue: "R" });
+    }
+  });
+
+  afterEach(() => {
+    calculator1.clickFuncButton({ buttonValue: "R" });
+  });
+});
+
+describe("Basic Button Click Test :", () => {
+  beforeEach(() => {
+    calculator1.clickFuncButton({ buttonValue: "R" });
+  });
+
+  it("Function", () => {
+    for (let i = 0; i < 9; i++) {
+      const result = commandCenter("*+-/R");
+      expect(result).toBe("0");
+      calculator1.clickFuncButton({ buttonValue: "R" });
+    }
+  });
+
+  it("Number", () => {
+    for (let i = 0; i < 9; i++) {
+      const result = commandCenter(i.toString());
+      expect(result).toBe(i.toString());
       calculator1.clickFuncButton({ buttonValue: "R" });
     }
   });

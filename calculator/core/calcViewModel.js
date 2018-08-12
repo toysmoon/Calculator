@@ -9,7 +9,6 @@ var CalcViewModel = (function() {
   CalcViewModel.prototype.calcEventHandler = function(event) {
     var eventInfo = this.eventParser(event);
     if (typeof this.calcModel[eventInfo.command] === "function") {
-      eventInfo.currentEventValue = this.currentEventValue;
       this.calcModel[eventInfo.command](eventInfo);
       this.currentEventValue = event.buttonValue;
     }
@@ -20,6 +19,7 @@ var CalcViewModel = (function() {
     return (result = {
       command: eventTarget.getAttribute("data-command"),
       buttonValue: eventTarget.innerText,
+      currentEventValue: this.currentEventValue,
       data: this.getData()
     });
   };

@@ -1,8 +1,4 @@
 var Calculator = (function() {
-  /*
-  @param parentElemnt 계산기가 그려질 장소
-  @param option {layout: []} 레이아웃 순서 및 정보
-  */
   function Calculator(option) {
     this.calcViewModel = new CalcViewModel(this, option);
     this.setHaveToRefresh(true);
@@ -17,31 +13,39 @@ var Calculator = (function() {
       }
       data = "";
     }
-    data += event.buttonValue;
-    this.calcViewModel.setData(data);
+    if (this.checkCipher(data)) {
+      data += event.buttonValue;
+      this.calcViewModel.setData(data);
+    }
+  };
 
-    return data;
+  Calculator.prototype.checkCipher = function(data) {
+    var splitData = data.split(".");
+    var maxCipher = [10, 5];
+    var isHaveDecimalPoint = data.indexOf(".") > -1 ? 1 : 0;
+
+    return (
+      splitData[isHaveDecimalPoint].length !== maxCipher[isHaveDecimalPoint]
+    );
   };
 
   Calculator.prototype.clickFuncButton = function(event) {
-    var value = event.buttonValue;
-    var data = this.calcViewModel.getData();
-    switch (value) {
+    switch (event.buttonValue) {
       case ".":
-        this.decialPointHandler();
+        this.decimalPointHandler();
         break;
       case "R":
         this.resetCalc();
         break;
       case "=":
-        this.equalHandler(data);
+        this.equalHandler(event);
         break;
       default:
-        this.operatorHandler(value, data);
+        this.operatorHandler(event);
     }
   };
 
-  Calculator.prototype.decialPointHandler = function() {
+  Calculator.prototype.decimalPointHandler = function() {
     var data = this.calcViewModel.getData();
     if (this.getHaveToRefresh()) {
       this.setHaveToRefresh(false);
@@ -59,7 +63,8 @@ var Calculator = (function() {
     this.calcViewModel.setData("0");
   };
 
-  Calculator.prototype.equalHandler = function(data) {
+  Calculator.prototype.equalHandler = function(event) {
+    var data = event.data;
     var dataList = this.calcData.dataList;
     var currentExpression = this.getCurrentExpression();
     var currentOperator = this.getCurrentOperator();
@@ -80,22 +85,29 @@ var Calculator = (function() {
     this.setHaveToRefresh(true);
   };
 
-  Calculator.prototype.operatorHandler = function(operator, data) {
+  Calculator.prototype.operatorHandler = function(event) {
+    var operator = event.buttonValue;
+    var data = event.data;
     var dataList = this.calcData.dataList;
     dataList.push(data);
-    if (this.isCanCalculate()) {
+    if (this.isCanCalculate(event)) {
       this.calculate();
     }
     this.setCurrentOperator(operator);
     this.setHaveToRefresh(true);
   };
 
-  Calculator.prototype.isCanCalculate = function() {
+  Calculator.prototype.isCanCalculate = function(event) {
     var currentOperator = this.getCurrentOperator();
-    if (currentOperator === "=") {
+    var currentEventValue = event.currentEventValue;
+    if (currentOperator === "=" || this.isCommandOperator(currentEventValue)) {
       this.calcData.dataList.pop();
     }
     return this.calcData.dataList.length === 2 && currentOperator !== "=";
+  };
+
+  Calculator.prototype.isCommandOperator = function(command) {
+    return this.findOpertorFunction(command) !== false;
   };
 
   Calculator.prototype.calculate = function() {

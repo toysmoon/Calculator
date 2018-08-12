@@ -2,13 +2,16 @@ var CalcViewModel = (function() {
   function CalcViewModel(model, option) {
     this.calcModel = model;
     this.calcView = new CalcView(this, option);
+    this.currentEventValue = null;
     this.data = "0";
   }
 
   CalcViewModel.prototype.calcEventHandler = function(event) {
     var eventInfo = this.eventParser(event);
     if (typeof this.calcModel[eventInfo.command] === "function") {
+      eventInfo.currentEventValue = this.currentEventValue;
       this.calcModel[eventInfo.command](eventInfo);
+      this.currentEventValue = event.buttonValue;
     }
   };
 

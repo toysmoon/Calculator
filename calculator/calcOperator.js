@@ -11,6 +11,7 @@ Calculator.prototype.findOpertorFunction = function(operator) {
       return item;
     }
   }
+  return false;
 };
 
 Calculator.prototype.funcPlus = function(a, b) {
@@ -26,5 +27,6 @@ Calculator.prototype.funcMultipliy = function(a, b) {
 };
 
 Calculator.prototype.funcDivide = function(a, b) {
-  return (Number(a) / Number(b)).toString();
+  var result = Math.floor((Number(a) / Number(b)) * 100000) / 100000;
+  return result.toString();
 };

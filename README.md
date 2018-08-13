@@ -7,4 +7,5 @@ Calculator
 - 테스트 실행
 
   > npm install
+  
   > node_modules/.bin/karma start

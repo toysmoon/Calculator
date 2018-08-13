@@ -24,7 +24,7 @@ var CalcView = (function() {
     var itemInfo = item.split(":");
     var itemTag = itemInfo[0];
     var itemValue = itemInfo[1];
-    var itemTemplate = Template.calcurator.tagInfo[itemTag] || item;
+    var itemTemplate = Template.calculator.tagInfo[itemTag] || item;
     itemTemplate = itemTemplate.replace(/\{\{value\}\}/g, itemValue);
     itemTemplate = itemTemplate.replace(
       /\{\{attrInfo\}\}/g,
@@ -38,7 +38,7 @@ var CalcView = (function() {
     var item = this.itemList[index];
     var itemInfo = item.split(":");
     var itemTag = itemInfo[0];
-    var attrObject = Template.calcurator.defaultAttr[itemTag];
+    var attrObject = Template.calculator.defaultAttr[itemTag];
     var attrString = "";
     for (var attrName in attrObject) {
       attrString += attrName + '="' + attrObject[attrName] + '"';

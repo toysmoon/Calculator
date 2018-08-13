@@ -1,6 +1,6 @@
 //Template 수정을 통해 마크업, attr 자유롭게 수정가능
 Template = {};
-Template.calcurator = {
+Template.calculator = {
   tagInfo: {
     resultBox: "<span {{attrInfo}}>{{value}}</span>",
     numberButton: "<button {{attrInfo}}>{{value}}</button>",
@@ -9,15 +9,15 @@ Template.calcurator = {
   defaultAttr: {
     resultBox: {
       "data-target": "",
-      class: "calc-result"
+      'class': "calc-result"
     },
     numberButton: {
       "data-command": "clickNumberButton",
-      class: "calc calc-number"
+      'class': "calc calc-number"
     },
     funcButton: {
       "data-command": "clickFuncButton",
-      class: "calc calc-func"
+      'class': "calc calc-func"
     }
   },
   itemList: [

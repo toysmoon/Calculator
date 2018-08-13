@@ -9,7 +9,7 @@ var CalcView = (function() {
   }
 
   CalcView.prototype.initializeLayout = function(option) {
-    this.itemList = option.itemList || Template.calcurator.itemList;
+    this.itemList = option.itemList || Template.calculator.itemList;
   };
 
   CalcView.prototype.initializeTemplate = function() {

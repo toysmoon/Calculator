@@ -1,3 +1,6 @@
+// calculator.js 파일이 아닌 외부 파일로 분리하여
+// 해당 파일만 수정하면 새로운 수식이 추가될 수 있도록 처리
+
 Calculator.prototype.OperatorMap = {
   funcPlus: "+",
   funcMinus: "-",

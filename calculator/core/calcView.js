@@ -59,6 +59,7 @@ var CalcView = (function() {
   CalcView.prototype.bindEvent = function() {
     var eventCallback = this.bindFunction(this.eventParser, this);
     var eventTarget = this.element;
+    //IE8 addEventListener 대신 attachEvent 사용
     if (eventTarget.addEventListener) {
       eventTarget.addEventListener("click", eventCallback);
     } else {
@@ -70,6 +71,7 @@ var CalcView = (function() {
     this.calcViewModel.calcEventHandler(event);
   };
 
+  //IE8 bind 함수 정의되어 있지 않아 간단하게 만들어서 사용
   CalcView.prototype.bindFunction = function(func, target) {
     return function() {
       func.apply(target, arguments);

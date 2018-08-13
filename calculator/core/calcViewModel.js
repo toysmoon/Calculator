@@ -1,3 +1,5 @@
+//CalcView 객체와 event와 data 변경을 연결해주는 부분
+
 var CalcViewModel = (function() {
   function CalcViewModel(model, option) {
     this.calcModel = model;
@@ -15,6 +17,7 @@ var CalcViewModel = (function() {
   };
 
   CalcViewModel.prototype.eventParser = function(event) {
+    //IE8 event.target -> event.srcElement
     var eventTarget = event.srcElement;
     return (result = {
       command: eventTarget.getAttribute("data-command"),
@@ -35,6 +38,7 @@ var CalcViewModel = (function() {
     this.calcView.setResultData(viewData);
   };
 
+  // 1000단위마다 쉼표 붙여주는 곳
   CalcViewModel.prototype.makeViewData = function(data) {
     var isHaveComma = data.indexOf(".") > 0;
     var divideData = data.split(".");

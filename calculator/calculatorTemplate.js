@@ -1,3 +1,4 @@
+//Template 수정을 통해 마크업, attr 자유롭게 수정가능
 Template = {};
 Template.calcurator = {
   tagInfo: {
